@@ -5,6 +5,9 @@ namespace EasyPeasyFirstPersonController
     public partial class FirstPersonController : MonoBehaviour
     {
         [Header("Settings")]
+        public bool isrunning = false;
+        public int stamina = 100;
+
         public float walkSpeed = 3f;
         public float sprintSpeed = 5f;
         public float crouchSpeed = 1.5f;
@@ -82,6 +85,8 @@ namespace EasyPeasyFirstPersonController
         [Header("Debug")]
         public bool currentStateDebug = true;
 
+        public InputManagerOld InputManager;
+
         void OnGUI()
         {
             if (currentState != null && Application.isEditor && currentStateDebug)
@@ -115,6 +120,39 @@ namespace EasyPeasyFirstPersonController
             currentState.UpdateState();
             HandleRotation();
             UpdateVisuals();
+
+            if (InputManager.sprint && stamina != 0)
+            {
+                sprintSpeed = 5f;
+                isrunning = true;
+            }
+            else
+            {
+                sprintSpeed = 3f;
+                isrunning = false;
+            }
+
+            while (isrunning == true)
+            {
+                stamina = stamina - 1;
+
+                if (stamina == -1)
+                {
+                    stamina = 0;
+                }
+            }
+
+            while (isrunning == false)
+            {
+                stamina = stamina + 1;
+
+                if (stamina == 100)
+                {
+                    stamina = 100;
+                }
+            }
+
+
         }
 
         private void HandleRotation()
@@ -203,6 +241,9 @@ namespace EasyPeasyFirstPersonController
                 isInWater = false;
             }
         }
+
+
+
 
     }
 }
